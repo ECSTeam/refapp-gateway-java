@@ -87,6 +87,7 @@ do
 
     if [[ "$service_status" == "succeeded" ]]
     then
+      echo
       echo $service_status
       exit 0
     fi
