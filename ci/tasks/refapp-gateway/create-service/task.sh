@@ -3,15 +3,14 @@
 
 function createServiceIfNeeded()
 {
+    x=$(cf curl /v2/service_instances/$(cf service ${REFAPP_SVC_INSTANCE} --guid)|jq -r '.entity.last_operation.state' )
     export x=`cf curl /v2/service_instances|jq -r '.resources[].entity|select(.name == "'${5}'").name| 1'`
-    if [ ${x:-0} == 1 ]
+    if [[ ${x} == null ]]
     then
-        echo "service $5 exists"
-    else
         echo "Creating service $5"
         $*
-
-
+    else
+        echo "service $5 exists"
     fi
 }
 
