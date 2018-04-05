@@ -108,7 +108,7 @@ jobs:
   max_in_flight: 1
   plan:
   - get: refapp-gateway-java-release
-    passed: [compile-refapp-gateway]
+    passed: [cf-push-refapp-gateway]
     trigger: true
   - task: cf-push-refapp-gateway
     file: refapp-gateway-java/ci/tasks/refapp-gateway/cf-push-refapp-gateway/task.yml
