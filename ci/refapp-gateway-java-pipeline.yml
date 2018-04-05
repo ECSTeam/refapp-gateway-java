@@ -77,38 +77,15 @@ jobs:
       REFAPP_SVC_PLAN: ((REFAPP_CONFIG_SVC_PLAN))
       REFAPP_SVC_INSTANCE: ((REFAPP_CONFIG_SVC_INSTANCE))
 
-- name: bind-config-service
-  serial: true
-  max_in_flight: 1
-  plan:
-  - get: refapp-gateway-java
-    passed: [compile-refapp-gateway]
-  - get: refapp-gateway-java-release
-    passed: [create-config-service]
-    trigger: true
-  - task: bind-config-service
-    file: refapp-gateway-java/ci/tasks/refapp-gateway/bind-service/task.yml
-    attempts: 2
-    params:
-      CF_API: ((CF_API))
-      CF_API_USER: ((CF_API_USER))
-      CF_API_PASSWORD: ((CF_API_PASSWORD))
-      CF_ORG: ((CF_ORG))
-      CF_SPACE: ((CF_SPACE))
-      CF_APP_NAME: ((CF_APP_NAME))
-      GITHUB_OWNER: ((GITHUB_OWNER))
-      GITHUB_REPOSITORY: ((GITHUB_REPOSITORY))
-      GITHUB_ACCESS_TOKEN: ((GITHUB_ACCESS_TOKEN))
-      REFAPP_SERVICE: ((REFAPP_CONFIG_SERVICE))
 
 - name: cf-push-refapp-gateway
   serial: true
   max_in_flight: 1
   plan:
   - get: refapp-gateway-java
-    passed: [bind-config-service]
+    passed: [create-config-service]
   - get: refapp-gateway-java-release
-    passed: [bind-config-service]
+    passed: [create-config-service]
     trigger: true
   - task: cf-push
     file: refapp-gateway-java/ci/tasks/refapp-gateway/cf-push/task.yml
