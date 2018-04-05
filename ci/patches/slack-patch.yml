@@ -86,4 +86,4 @@
     put: slack-alert
     params:
       channel: '#team-pipeline-status'
-      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, task=cf-push successful :green_heart:"
+      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, task=cf-push successful  :green_heart:"
