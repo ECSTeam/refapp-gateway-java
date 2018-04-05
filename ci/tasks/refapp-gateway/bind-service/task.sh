@@ -42,6 +42,7 @@ done
 echo $servicesCount
 if [ $servicesCount -eq 0 ]
 then
+  echo "cf bind-service ${CF_APP_NAME} ${REFAPP_SVC_INSTANCE}"
   cf bind-service ${CF_APP_NAME} ${REFAPP_SVC_INSTANCE}
 fi
 
