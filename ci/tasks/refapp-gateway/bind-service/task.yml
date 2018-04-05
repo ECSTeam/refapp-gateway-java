@@ -10,7 +10,7 @@ inputs:
 outputs:
 - name: refapp-gateway-cast-artifacts
 run:
-  path: refapp-gateway-java/ci/tasks/refapp-gateway/create-service/task.sh
+  path: refapp-gateway-java/ci/tasks/refapp-gateway/bind-service/task.sh
 params:
   CF_API: ((CF_API))
   CF_API_USER: ((CF_API_USER))
