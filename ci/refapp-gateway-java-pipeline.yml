@@ -58,6 +58,7 @@ jobs:
   plan:
   - get: refapp-gateway-java
     passed: [compile-refapp-gateway]
+    trigger: true
   - get: refapp-gateway-java-release
     passed: [compile-refapp-gateway]
     trigger: true

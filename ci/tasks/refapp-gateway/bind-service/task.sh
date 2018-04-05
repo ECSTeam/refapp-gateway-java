@@ -38,6 +38,7 @@ do
   fi
 done
 
+# Need to check if the service is ready to be bound
 echo $servicesCount
 if [ $servicesCount -eq 0 ]
 then
@@ -46,4 +47,3 @@ fi
 
 cf restage ${CF_APP_NAME}
 
-echo "done"
