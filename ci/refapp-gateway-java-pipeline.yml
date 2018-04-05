@@ -15,7 +15,6 @@ resources:
     ignore_paths:
         - README.md
         - .gitignore
-        - release-tag.txt
         - ci/fly.sh
         - ci/refapp-gateway-java-pipeline.yml
 
