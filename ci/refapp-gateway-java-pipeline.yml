@@ -89,7 +89,7 @@ jobs:
   - get: refapp-gateway-java-release
     passed: [compile-refapp-gateway]
     trigger: true
-  - task: create-config-service
+  - task: create-service-registry
     file: refapp-gateway-java/ci/tasks/refapp-gateway/create-service/task.yml
     attempts: 2
     params:
@@ -113,9 +113,9 @@ jobs:
   plan:
   - get: refapp-gateway-java
     passed: [compile-refapp-gateway]
-  - get: refapp-gateway-java-release
-    passed: [compile-refapp-gateway]
     passed: [create-config-service]
+    trigger: true
+  - get: refapp-gateway-java-release
     passed: [create-service-registry]
     trigger: true
   - task: cf-push
