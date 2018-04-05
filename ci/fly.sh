@@ -1,8 +1,8 @@
 #!/bin/bash
 #set -x
-BOSH2_CMD=$(which --skip-alias bosh2)
-BOSH2_CMD=${BOSH2_CMD:-$(which bosh)}
-#BOSH2_CMD=bosh2
+#BOSH2_CMD=$(which --skip-alias bosh2)
+#BOSH2_CMD=${BOSH2_CMD:-$(which bosh)}
+BOSH2_CMD=bosh2
 
 set -e
 
