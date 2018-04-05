@@ -108,12 +108,13 @@ jobs:
   serial: true
   max_in_flight: 1
   plan:
-  - get: refapp-gateway-java-release
+  - get: refapp-gateway-java
     passed: [create-config-service]
+  - get: refapp-gateway-java-release
     passed: [cf-push-refapp-gateway]
     trigger: true
   - task: cf-push-refapp-gateway
-    file: refapp-gateway-java/ci/tasks/refapp-gateway/cf-push-refapp-gateway/task.yml
+    file: refapp-gateway-java/ci/tasks/refapp-gateway/cf-start-gateway-app/task.yml
     attempts: 2
     params:
       CF_API: ((CF_API))
