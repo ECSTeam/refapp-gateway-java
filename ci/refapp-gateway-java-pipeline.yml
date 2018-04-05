@@ -109,6 +109,7 @@ jobs:
   plan:
   - get: refapp-gateway-java-release
     passed: [cf-push-refapp-gateway]
+    passed: [create-config-service]
     trigger: true
   - task: cf-push-refapp-gateway
     file: refapp-gateway-java/ci/tasks/refapp-gateway/cf-push-refapp-gateway/task.yml
