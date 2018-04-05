@@ -143,7 +143,7 @@ jobs:
   - get: refapp-gateway-java-release
     passed: [cf-push-refapp-gateway]
     trigger: true
-  - task: cf-push-refapp-gateway
+  - task: cf-start-gateway-app
     file: refapp-gateway-java/ci/tasks/refapp-gateway/cf-start-gateway-app/task.yml
     attempts: 2
     params:
