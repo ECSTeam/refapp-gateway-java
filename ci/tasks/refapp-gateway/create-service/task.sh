@@ -1,10 +1,8 @@
 #!/bin/bash
 
-
 function createServiceIfNeeded()
 {
-    x=$(cf curl /v2/service_instances/$(cf service ${REFAPP_SVC_INSTANCE} --guid)|jq -r '.entity.last_operation.state' )
-    export x=`cf curl /v2/service_instances|jq -r '.resources[].entity|select(.name == "'${5}'").name| 1'`
+    x=$(cf curl /v2/service_instances/$(cf service ${5} --guid)|jq -r '.entity.last_operation.state' )
     if [[ ${x} == null ]]
     then
         echo "Creating service $5"
