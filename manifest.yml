@@ -6,4 +6,3 @@ applications:
   - route: refapp-gateway.apps.lab04.den.ecsteam.io
 services:
   - config-service
-  - service-registry
