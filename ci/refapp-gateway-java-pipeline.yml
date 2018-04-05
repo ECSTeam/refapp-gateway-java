@@ -1,0 +1,126 @@
+resource_types:
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
+
+resources:
+# source code for the pipeline scripts
+- name: refapp-gateway-java
+  type: git
+  source:
+    uri: ((github_uri))
+    private_key: ((github_private_key))
+    ignore_paths:
+        - README.md
+        - .gitignore
+        - release-tag.txt
+        - ci/fly.sh
+        - ci/refapp-gateway-java-pipeline.yml
+
+- name: refapp-gateway-java-release
+  type: github-release
+  source:
+    owner: ((GITHUB_OWNER))
+    repository: ((GITHUB_REPOSITORY))
+    access_token: ((GITHUB_ACCESS_TOKEN))
+
+- name: slack-alert
+  type: slack-notification
+  source:
+    url: https://hooks.slack.com/services/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
+
+jobs:
+# refapp-gateway app pipeline
+- name: compile-refapp-gateway
+  serial: true
+  max_in_flight: 1
+  plan:
+  - get: refapp-gateway-java
+    trigger: true
+  - task: compile
+    file: refapp-gateway-java/ci/tasks/refapp-gateway/compile/task.yml
+  - put: refapp-gateway-java-release
+    params:
+      name: refapp-gateway-java/release-name.txt
+      tag: refapp-gateway-java/release-tag.txt
+      body: refapp-gateway-java/README.md
+      globs:
+      - refapp-gateway-java-release/refapp-gateway-java.tar.gz
+      GITHUB_OWNER: ((GITHUB_OWNER))
+      GITHUB_REPOSITORY: ((GITHUB_REPOSITORY))
+      GITHUB_ACCESS_TOKEN: ((GITHUB_ACCESS_TOKEN))
+
+- name: create-config-service
+  serial: true
+  max_in_flight: 1
+  plan:
+  - get: refapp-gateway-java
+    passed: [compile-refapp-gateway]
+  - get: refapp-gateway-java-release
+    passed: [compile-refapp-gateway]
+    trigger: true
+  - task: create-config-service
+    file: refapp-gateway-java/ci/tasks/refapp-gateway/create-service/task.yml
+    attempts: 2
+    params:
+      CF_API: ((CF_API))
+      CF_API_USER: ((CF_API_USER))
+      CF_API_PASSWORD: ((CF_API_PASSWORD))
+      CF_ORG: ((CF_ORG))
+      CF_SPACE: ((CF_SPACE))
+      GITHUB_OWNER: ((GITHUB_OWNER))
+      GITHUB_REPOSITORY: ((GITHUB_REPOSITORY))
+      GITHUB_ACCESS_TOKEN: ((GITHUB_ACCESS_TOKEN))
+      REFAPP_SERVICE: ((REFAPP_CONFIG_SERVICE))
+      REFAPP_SVC_PLAN: ((REFAPP_CONFIG_SVC_PLAN))
+      REFAPP_SVC_INSTANCE: ((REFAPP_CONFIG_SVC_INSTANCE))
+
+- name: bind-config-service
+  serial: true
+  max_in_flight: 1
+  plan:
+  - get: refapp-gateway-java
+    passed: [compile-refapp-gateway]
+  - get: refapp-gateway-java-release
+    passed: [create-config-service]
+    trigger: true
+  - task: bind-config-service
+    file: refapp-gateway-java/ci/tasks/refapp-gateway/bind-service/task.yml
+    attempts: 2
+    params:
+      CF_API: ((CF_API))
+      CF_API_USER: ((CF_API_USER))
+      CF_API_PASSWORD: ((CF_API_PASSWORD))
+      CF_ORG: ((CF_ORG))
+      CF_SPACE: ((CF_SPACE))
+      CF_APP_NAME: ((CF_APP_NAME))
+      GITHUB_OWNER: ((GITHUB_OWNER))
+      GITHUB_REPOSITORY: ((GITHUB_REPOSITORY))
+      GITHUB_ACCESS_TOKEN: ((GITHUB_ACCESS_TOKEN))
+
+- name: cf-push-refapp-gateway
+  serial: true
+  max_in_flight: 1
+  plan:
+  - get: refapp-gateway-java
+    passed: [bind-config-service]
+  - get: refapp-gateway-java-release
+    passed: [bind-config-service]
+    trigger: true
+  - task: cf-push
+    file: refapp-gateway-java/ci/tasks/refapp-gateway/cf-push/task.yml
+    attempts: 2
+    params:
+      CF_API: ((CF_API))
+      CF_API_USER: ((CF_API_USER))
+      CF_API_PASSWORD: ((CF_API_PASSWORD))
+      CF_ORG: ((CF_ORG))
+      CF_SPACE: ((CF_SPACE))
+      CF_APP_NAME: ((CF_APP_NAME))
+      GITHUB_OWNER: ((GITHUB_OWNER))
+      GITHUB_REPOSITORY: ((GITHUB_REPOSITORY))
+      GITHUB_ACCESS_TOKEN: ((GITHUB_ACCESS_TOKEN))
+
+

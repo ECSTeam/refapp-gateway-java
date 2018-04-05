@@ -1,0 +1,89 @@
+
+# add slack alert to struts app jobs
+# Add alert to struts app compile job
+- type: replace
+  path: /jobs/name=compile-refapp-gateway/plan/get=refapp-gateway-java:before
+  value:
+    put: slack-alert
+    params:
+      channel: '#team-pipeline-status'
+      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, get=refapp-gateway-java started   :smiling_imp:"
+- type: replace
+  path: /jobs/name=compile-refapp-gateway/plan/task=compile/on_failure?
+  value:
+    put: slack-alert
+    params:
+      channel: '#team-pipeline-status'
+      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, task=compile failed :red_circle:"
+- type: replace
+  path: /jobs/name=compile-refapp-gateway/plan/task=compile/on_abort?
+  value:
+    put: slack-alert
+    params:
+      channel: '#team-pipeline-status'
+      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, task=compile aborted :white_circle:"
+- type: replace
+  path: /jobs/name=compile-refapp-gateway/plan/task=compile/on_success?
+  value:
+    put: slack-alert
+    params:
+      channel: '#team-pipeline-status'
+      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, task=compile successful :green_heart:"
+# add slack notice to build artifact push to GitHub
+- type: replace
+  path: /jobs/name=compile-refapp-gateway/plan/put=refapp-gateway-java-release:before
+  value:
+    put: slack-alert
+    params:
+      channel: '#team-pipeline-status'
+      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, put=refapp-gateway-java-release started :smiling_imp:"
+- type: replace
+  path: /jobs/name=compile-refapp-gateway/plan/put=refapp-gateway-java-release/on_failure?
+  value:
+    put: slack-alert
+    params:
+      channel: '#team-pipeline-status'
+      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, put=refapp-gateway-java-release failed :red_circle:"
+- type: replace
+  path: /jobs/name=compile-refapp-gateway/plan/put=refapp-gateway-java-release/on_abort?
+  value:
+    put: slack-alert
+    params:
+      channel: '#team-pipeline-status'
+      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, put=refapp-gateway-java-release aborted :white_circle:"
+- type: replace
+  path: /jobs/name=compile-refapp-gateway/plan/put=refapp-gateway-java-release/on_success?
+  value:
+    put: slack-alert
+    params:
+      channel: '#team-pipeline-status'
+      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, put=refapp-gateway-java-release successful :green_heart:"
+# Add alert to struts app cf push job
+- type: replace
+  path: /jobs/name=cf-push-refapp-gateway/plan/get=refapp-gateway-java:before
+  value:
+    put: slack-alert
+    params:
+      channel: '#team-pipeline-status'
+      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, get=refapp-gateway-java started    "
+- type: replace
+  path: /jobs/name=cf-push-refapp-gateway/plan/task=cf-push/on_failure?
+  value:
+    put: slack-alert
+    params:
+      channel: '#team-pipeline-status'
+      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, task=cf-push failed :red_circle:"
+- type: replace
+  path: /jobs/name=cf-push-refapp-gateway/plan/task=cf-push/on_abort?
+  value:
+    put: slack-alert
+    params:
+      channel: '#team-pipeline-status'
+      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, task=cf-push aborted :white_circle:"
+- type: replace
+  path: /jobs/name=cf-push-refapp-gateway/plan/task=cf-push/on_success?
+  value:
+    put: slack-alert
+    params:
+      channel: '#team-pipeline-status'
+      text: "Dev - Build No. $BUILD_NAME - $BUILD_JOB_NAME, task=cf-push successful :green_heart:"

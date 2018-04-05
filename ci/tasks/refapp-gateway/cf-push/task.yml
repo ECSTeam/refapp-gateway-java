@@ -1,0 +1,19 @@
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: cnsadmin/struts-example
+    tag: latest 
+inputs:
+  - name: refapp-gateway-java
+  - name: refapp-gateway-java-release
+run:
+  path: refapp-gateway-java/ci/tasks/refapp-gateway/cf-push/task.sh
+params:
+  CF_API: ((CF_API))
+  CF_API_USER: ((CF_API_USER))
+  CF_API_PASSWORD: ((CF_API_PASSWORD))
+  CF_ORG: ((CF_ORG))
+  CF_SPACE: ((CF_SPACE))
+  CF_APP_NAME: ((CF_APP_NAME))
