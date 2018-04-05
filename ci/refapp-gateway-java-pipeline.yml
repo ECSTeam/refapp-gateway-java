@@ -99,6 +99,7 @@ jobs:
       GITHUB_OWNER: ((GITHUB_OWNER))
       GITHUB_REPOSITORY: ((GITHUB_REPOSITORY))
       GITHUB_ACCESS_TOKEN: ((GITHUB_ACCESS_TOKEN))
+      REFAPP_SERVICE: ((REFAPP_CONFIG_SERVICE))
 
 - name: cf-push-refapp-gateway
   serial: true
