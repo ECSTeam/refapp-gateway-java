@@ -2,8 +2,6 @@
 applications:
 - name: gateway
   memory: 1024M
-  routes:
-  - route: refapp-gateway.apps.lab04.den.ecsteam.io
   services:
     - config-service
     - service-registry
