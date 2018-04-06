@@ -1,5 +1,17 @@
 #!/bin/bash -eE
-
+set -x
+CF_API='https://api.system.lab04.den.ecsteam.io'
+CF_API_PASSWORD='MwFNY2LC4NszTc6tOlWKhx_pwQ7txdP0'
+CF_API_USER='admin'
+CF_ORG='dev'
+CF_SPACE='refapp'
+GITHUB_ACCESS_TOKEN='657be61fc39b9ce671ee96807db0e9aa3845191b'
+GITHUB_OWNER='ECSTeam'
+GITHUB_REPOSITORY='refapp-gateway-java'
+REFAPP_SERVICE='p-config-server'
+REFAPP_SVC_INSTANCE='config-service'
+REFAPP_SVC_PLAN='standard'
+CF_APP_NAME='gateway'
 
 set -o errtrace
 
@@ -39,19 +51,11 @@ error() {
 }
 
 
-declare -i DEFAULT_TIMEOUT=${TIMEOUT:-600}
-declare -i DEFAULT_INTERVAL=${TIMEOUT_INTERVAL:-2}
-
-
-# Timeout.
-declare -i timeout=DEFAULT_TIMEOUT
-# Interval between checks if the process is still alive.
-declare -i interval=DEFAULT_INTERVAL
-
-
 function createServiceIfNeeded()
 {
+    disableTraps
     x=$(cf curl /v2/service_instances/$(cf service ${5} --guid)|jq -r '.entity.last_operation.state' )
+    enableTraps
     if [[ ${x} == null ]]
     then
         echo "Creating service $5"
@@ -60,8 +64,14 @@ function createServiceIfNeeded()
         echo "service $5 exists"
     fi
 }
+declare -i DEFAULT_TIMEOUT=${TIMEOUT:-600}
+declare -i DEFAULT_INTERVAL=${TIMEOUT_INTERVAL:-2}
 
 
+# Timeout.
+declare -i timeout=DEFAULT_TIMEOUT
+# Interval between checks if the process is still alive.
+declare -i interval=DEFAULT_INTERVAL
 
 ###
 ### Run script
