@@ -1,5 +1,5 @@
 #!/bin/bash -eE
-set -x
+#set -x
 
 set -o errtrace
 
